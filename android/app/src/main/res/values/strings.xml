@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">田凯烁打卡</string>
+    <string name="channel_reminder">打卡提醒</string>
+    <string name="channel_done">任务完成</string>
+    <string name="channel_alarm">闹钟提醒</string>
+    <string name="foreground_title">田凯烁打卡正在运行</string>
+    <string name="foreground_text">后台提醒已激活，14个时间点准时通知</string>
+    <string name="battery_title">电池优化设置</string>
+    <string name="battery_msg">请将本应用设为「不优化」，否则后台提醒可能被系统杀掉。</string>
+    <string name="battery_go">去设置</string>
+    <string name="battery_later">稍后</string>
+    <string name="btn_done">✅已完成</string>
+    <string name="btn_later">⏰稍后</string>
+    <string name="back_again">再按一次退出</string>
+</resources>

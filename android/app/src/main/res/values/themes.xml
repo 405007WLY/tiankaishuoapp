@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Tiankaishuo" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">#c0392b</item>
+        <item name="colorPrimaryDark">#a93226</item>
+        <item name="colorAccent">#2471a3</item>
+        <item name="android:statusBarColor">#1a1a2e</item>
+        <item name="android:navigationBarColor">#1a1a2e</item>
+        <item name="android:windowBackground">#f0f0f0</item>
+    </style>
+</resources>

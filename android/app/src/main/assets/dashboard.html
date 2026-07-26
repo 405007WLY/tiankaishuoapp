@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>田凯烁·大学四年打卡</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--red:#c0392b;--blue:#2471a3;--green:#1e8449;--orange:#d35400;--purple:#7d3c98;--dark:#1a1a2e;--gray:#555;--light:#f0f0f0}
+html{font-size:15px}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--light);color:#222;line-height:1.45;padding-bottom:0;margin:0;font-size:0.92rem}
+
+/* 顶部进度 */
+.top-bar{position:sticky;top:0;z-index:100;background:var(--dark);color:#fff;padding:8px 10px;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.top-bar h1{font-size:0.95rem;margin-bottom:3px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:2px}
+.top-bar h1 small{font-size:0.7rem;color:#aaa;font-weight:normal}
+.pw{height:5px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;margin-bottom:3px}
+.pb{height:100%;background:linear-gradient(90deg,var(--green),#2ecc71);width:0;transition:width .5s}
+.st{display:flex;justify-content:space-between;font-size:0.7rem;color:#ccc;flex-wrap:wrap;gap:2px}
+.st b{color:#2ecc71}
+
+/* 卡片 */
+.cd{background:#fff;border-radius:8px;padding:10px;margin:8px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.cd h3{font-size:0.9rem;margin-bottom:8px;display:flex;align-items:center;gap:4px}
+.cd.r h3{color:var(--red)}.cd.b h3{color:var(--blue)}.cd.g h3{color:var(--green)}.cd.o h3{color:var(--orange)}.cd.p h3{color:var(--purple)}
+
+/* 底线警告 */
+.wb{background:#fdedec;border:2px solid var(--red);border-radius:8px;padding:10px;margin:8px}
+.wb h3{color:var(--red);margin-bottom:5px;font-size:0.85rem}
+.wb ol{padding-left:16px;font-size:0.78rem;line-height:1.5}
+.wb li{margin-bottom:3px}
+.wb b{color:var(--red)}
+
+/* 任务项 */
+.ts{display:flex;align-items:flex-start;padding:6px 0;border-bottom:1px solid #f0f0f0;cursor:pointer;user-select:none}
+.ts:last-child{border-bottom:none}
+.cb{width:18px;height:18px;border:2px solid #bbb;border-radius:4px;margin-right:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .2s;margin-top:1px}
+.cb.rq{border-color:var(--red)}.cb.alt{border-color:var(--orange)}
+.cb.ck{background:var(--green);border-color:var(--green);color:#fff}
+.cb.rq.ck{background:var(--red);border-color:var(--red)}
+.tb{flex:1;min-width:0}
+.tt{font-size:0.82rem;font-weight:500;word-break:break-all}
+.td{font-size:0.72rem;color:var(--gray);margin-top:1px;word-break:break-all}
+.tg{font-size:0.68rem;padding:1px 4px;border-radius:3px;margin-left:3px;background:var(--light);color:var(--gray);white-space:nowrap}
+.tg.rq{background:#fdedec;color:var(--red)}.tg.alt{background:#fef5e7;color:var(--orange)}
+.tg.core{background:#eaf2f8;color:var(--blue)}
+.tg.bm{background:#e8f8f5;color:var(--green)}
+
+/* 表格 */
+table{width:100%;border-collapse:collapse;font-size:0.75rem}
+th,td{padding:4px 3px;text-align:left;border-bottom:1px solid #f0f0f0;vertical-align:top}
+th{background:var(--light);font-weight:bold;color:var(--gray);font-size:0.72rem}
+td{font-size:0.75rem}
+
+/* 进度条 */
+.mp{height:5px;background:#eee;border-radius:3px;overflow:hidden;margin-top:3px}
+.mp>div{height:100%;background:var(--blue);border-radius:3px;transition:width .5s}
+
+/* 按钮 */
+.bt{display:inline-block;padding:6px 12px;border:none;border-radius:5px;font-size:0.82rem;font-weight:bold;cursor:pointer;margin:2px}
+.bt-r{background:var(--red);color:#fff}.bt-b{background:var(--blue);color:#fff}.bt-g{background:var(--green);color:#fff}.bt-o{background:var(--orange);color:#fff}
+
+/* 输入 */
+input[type=range]{width:100%;margin:6px 0;height:20px}
+input[type=number],input[type=text],textarea{width:100%;padding:5px 8px;border:1px solid #ddd;border-radius:5px;font-size:0.82rem;font-family:inherit}
+
+/* 标签 */
+.tag-r{display:inline-block;padding:1px 5px;background:#fdedec;color:var(--red);border-radius:3px;font-size:0.7rem;margin:1px}
+.tag-o{display:inline-block;padding:1px 5px;background:#fef5e7;color:var(--orange);border-radius:3px;font-size:0.7rem;margin:1px}
+.tag-g{display:inline-block;padding:1px 5px;background:#eafaf1;color:var(--green);border-radius:3px;font-size:0.7rem;margin:1px}
+.tag-b{display:inline-block;padding:1px 5px;background:#eaf2f8;color:var(--blue);border-radius:3px;font-size:0.7rem;margin:1px}
+
+/* 弹性日 */
+.fd{background:#fff8e1;border:1px solid #ffe082;border-radius:6px;padding:8px;margin:6px 8px;font-size:0.78rem}
+.fd h4{color:var(--orange);margin-bottom:4px;font-size:0.82rem}
+
+/* 周块 */
+.wk{margin-bottom:6px;padding:6px 8px;background:#fafafa;border-radius:5px;border-left:3px solid #bbb}
+.wk.star1{border-left-color:var(--blue)}
+.wk.star2{border-left-color:var(--orange)}
+.wk.star3{border-left-color:var(--red)}
+.wk b{font-size:0.82rem}
+.wk ul{padding-left:14px;font-size:0.75rem;margin-top:2px}
+.wk li{margin-bottom:1px}
+.wk .ck{font-size:0.72rem;color:var(--green);margin-top:2px}
+
+/* 通知 */
+.nt{position:fixed;top:50px;left:8px;right:8px;z-index:200;background:#fff;border-radius:8px;padding:10px;box-shadow:0 3px 12px rgba(0,0,0,.2);transform:translateY(-200px);transition:transform .4s;border-left:4px solid var(--red)}
+.nt.sw{transform:translateY(0)}
+.nt h4{font-size:0.85rem;margin-bottom:2px}
+.nt p{font-size:0.78rem;color:var(--gray)}
+.nt .bs{margin-top:5px;padding:4px 10px;font-size:0.78rem;border:none;border-radius:4px;background:var(--green);color:#fff;cursor:pointer}
+.nt .bs.l{background:var(--orange);margin-left:4px}
+
+/* 打印 */
+@media print{
+  body{background:#fff;padding:0;font-size:11pt}
+  .top-bar,.nt{display:none!important}
+  .cd{break-inside:avoid;box-shadow:none;border:1px solid #ddd;margin:4px 0;padding:8px}
+  .wb{break-inside:avoid;border:2px solid #000}
+  .cb{border:1.5px solid #333!important}
+  .cb.ck{background:#fff!important;color:#333!important;border-color:#333!important}
+  .tg{background:#fff!important;border:1px solid #999;color:#333!important}
+  table{border:1px solid #ddd}
+  th,td{border:1px solid #ddd}
+}
+
+/* 小字说明 */
+.note{font-size:0.7rem;color:var(--gray);margin-top:3px;line-height:1.4}
+.warn{font-size:0.72rem;color:var(--red);margin-top:3px;line-height:1.4}
+.ok{font-size:0.72rem;color:var(--green);margin-top:2px}
+
+/* 键盘可访问 */
+button:focus,.cb:focus{outline:2px solid var(--blue);outline-offset:1px}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+<h1>🎯 田凯烁·打卡 <small id="dt"></small></h1>
+<div class="pw"><div class="pb" id="pbar"></div></div>
+<div class="st"><span>今日 <b id="tdn">0</b>/<span id="ttl">0</span></span><span>连续<b id="strk">0</b>天</span><span>词汇<b id="vc">0</b>/2000</span></div>
+</div>
+
+<div class="nt" id="nt"><h4 id="ntt"></h4><p id="ntp"></p><button class="bs" onclick="dn()">✅已完成</button><button class="bs l" onclick="ht()">⏰稍后</button></div>
+
+<!-- ========== 五条底线 ========== -->
+<div class="wb">
+<h3>⚠️ 五条不可逾越底线</h3>
+<ol>
+<li><b>转专业</b>：入学满一学期、全部合格(不含补考及格)、GPA≥2.0、无处分、<b>只有一次机会</b>。时间锚点：<b>一年级第一学期期末启动报名，第二学期开学初考核</b>（南特[2024]33号）。考核形式：笔试或面试，百分制。</li>
+<li><b>英语</b>：零基础起步9个月过四级(2027.6)，大一下考NECCS C类(初赛2027.4.12)。</li>
+<li><b>参军</b>：男身高≥160cm、17.5≤BMI&lt;30、裸眼≥4.5、矫正≥4.8且≤600度。男兵征兵<b>截止2027年8月10日</b>。</li>
+<li><b>绩点</b>：专业前30%(GPA≥3.0)稳进教育康复学。</li>
+<li><b>健康</b>：22:30前睡每天7h+。健康是1其他是0。</li>
+</ol>
+<div class="note">📞 康复科学学院 025-89668064（吴老师/王老师）| 教务处 025-89668111 / 89668222 | jwc.njts.edu.cn | kfkx.njts.edu.cn</div>
+</div>
+
+<!-- ========== 核心三原则 ========== -->
+<div class="fd">
+<h4>🎯 核心三原则（大一上只保这3项）</h4>
+<div><span class="tag-r">绩点</span> 转专业入场券 · <span class="tag-r">英语</span> 零基础9个月过四级 · <span class="tag-b">最低体能</span> 参军退路不可归零</div>
+<div class="note">其余全部后置到转专业成功后再启动。社团只留1个。</div>
+</div>
+
+<!-- ========== 工作日作息 ========== -->
+<div class="cd r">
+<h3>📋 工作日作息表（减负版·严格≤3.5h）</h3>
+<div class="note">验证：单词30min + 专业课60~90min + 英语40min + 复盘15min = 145~175min ≈ 2.5~3h；加隔天晨跑日均+10min ≈ 3h ✅</div>
+<div id="wd"></div>
+</div>
+
+<!-- ========== 周末 ========== -->
+<div class="cd o" id="weCard">
+<h3>📋 周末轻量化（仅周末显示）</h3>
+<div id="we"></div>
+</div>
+
+<!-- ========== 保底4项 ========== -->
+<div class="cd g">
+<h3>🛡️ 保底4项（减负模式·过载时只保这些）</h3>
+<div id="bt4"></div>
+</div>
+
+<!-- ========== 弹性日规则 ========== -->
+<div class="fd">
+<h4>🔄 弹性日规则（当日完成率&lt;50%自动切换）</h4>
+<div>① 当日任务完成&lt;50% → 次日切换保底模式（只做4项）</div>
+<div>② 保底模式连续3天完成 → 自动恢复正常工作日</div>
+<div>③ 每月允许摆烂1-2天（三件套：散步/听歌/早睡）</div>
+<div>④ 生病/社团大型活动/征兵体检 → 当日直接保底模式</div>
+<div>⑤ 每周日强制半休（上午休息，下午纯放松）</div>
+</div>
+
+<!-- ========== 英语6阶段 ========== -->
+<div class="cd b">
+<h3>📚 英语零基础6阶段路径（听力第3周启动）</h3>
+<div id="enStages"></div>
+<div style="margin-top:8px">
+<label style="font-size:0.82rem">词汇累计追踪（目标2000）：</label>
+<input type="number" id="vi" placeholder="输入累计词汇数" style="margin:4px 0">
+<div class="mp"><div id="vp" style="width:0%"></div></div>
+<div class="note">当前：<span id="vcr">0</span>/2000（<span id="vpct">0</span>%）</div>
+<button class="bt bt-b" onclick="uv()">📝更新词汇</button>
+</div>
+<div class="note" style="margin-top:6px">📖 资料：墨墨背单词(四级高频) + B站音标课程 + VOA慢速 + 四级真题 + 《英语奥林匹克》C类(沈阳出版社) + 《核心词汇2000》(石化出版社)</div>
+</div>
+
+<!-- ========== 18周清单 ========== -->
+<div class="cd">
+<h3>📅 大一上18周逐周清单</h3>
+<div id="wkList"></div>
+</div>
+
+<!-- ========== 转专业成功后衔接 ========== -->
+<div class="cd p">
+<h3>🔗 转专业成功后衔接方案</h3>
+<div class="note">
+<b>学分转换：</b>已修学前教育课程→转换选修学分（最多转换30%）| <b>补修策略：</b>大二上集中补修大一教康核心课（每周多2-3节课）| <b>绩点追赶：</b>补修课必须85+，否则拖累总GPA | <b>实验室：</b>大二下进康复实验室刷科研经历
+</div>
+</div>
+
+<!-- ========== 四大应急 ========== -->
+<div class="cd r">
+<h3>🆘 四大挫折应急（落地步骤）</h3>
+<div id="emList"></div>
+</div>
+
+<!-- ========== 保底毕业路线 ========== -->
+<div class="cd o">
+<h3>🛡️ 极端兜底·保底毕业路线</h3>
+<div class="note">
+当"绩点不够转专业 + 英语学不进去 + 参军体检不合格"同时发生：<br>
+<b>①</b> 学前教育本专业毕业 → 考小学教师资格证 → 普通幼儿园教师<br>
+<b>②</b> 普通话二甲 + 计算机二级 → 考普通公务员/事业编<br>
+<b>③</b> 不放弃英语 → 大二下再战四级 → 打开考研通道<br>
+<b>④</b> 保持GPA≥2.5 → 至少能毕业拿到学位证
+</div>
+</div>
+
+<!-- ========== 证书地图 ========== -->
+<div class="cd">
+<h3>🏆 证书地图（三级分级）</h3>
+<div id="certList"></div>
+<div class="warn">🔴 不考：家庭教育指导师(非国家职业资格) · 感觉统合训练师(非国家职业资格) · ABA认证(行业证书·认可度存疑)</div>
+</div>
+
+<!-- ========== 参军体检12项 ========== -->
+<div class="cd r">
+<h3>🎖️ 参军体检12项（可逆/不可逆）</h3>
+<div id="phyList"></div>
+<div class="note">📞 征兵体检咨询：当地武装部 | 全国征兵网 www.gfbzb.gov.cn | 截止2027.8.10</div>
+</div>
+
+<!-- ========== 量化决策 ========== -->
+<div class="cd b">
+<h3>🎯 大三上量化决策标准</h3>
+<div class="note">
+<span class="tag-g">GPA≥3.5 且 六级≥425</span> → 优先考研(特教/发展心理/学前)<br>
+<span class="tag-b">行测模考≥65分</span> → 优先考公/事业编<br>
+<span class="tag-r">体检12项全过</span> → 优先入伍（学费代偿+单列岗位）<br>
+<span class="tag-o">GPA&lt;3.0 且 行测&lt;55</span> → 优先康复机构就业
+</div>
+</div>
+
+<!-- ========== 大二到大四框架 ========== -->
+<div class="cd">
+<h3>📅 大二到大四分学期框架</h3>
+<div id="semList"></div>
+</div>
+
+<!-- ========== 四年预算 ========== -->
+<div class="cd o">
+<h3>💰 四年真实预算（分年明细）</h3>
+<div class="note">
+<b>大一</b>：教资报名+教材≈800 + 四级报名≈100 + 普通话≈100 + 墨墨≈80 + 书籍≈500 + 体检≈70 = <b>约1650</b><br>
+<b>大二</b>：六级≈100 + 计算机二级≈200 + NECCS≈150 + 驾照3000~5000 + 考研/考公基础班≈3000 = <b>约6500~9000</b><br>
+<b>大三</b>：考研/考公全程班≈8000~15000 + 教资面试≈300 + 心理咨询≈3000 = <b>约9000~18000</b><br>
+<b>大四</b>：康复治疗师报名≈200 + 求职服装≈500 + 考研复试≈1000 = <b>约1700</b><br>
+<b>合计</b>：约1.9万~3万 | 奖学金对冲：国奖8000(<1%概率不作常规预期) + 励志5000 + 校级1000~3000 ≈ 概率加权约500/年
+</div>
+</div>
+
+<!-- ========== 心理疏导 ========== -->
+<div class="cd g">
+<h3>🧠 心理疏导5步（情绪≤3分启动）</h3>
+<div class="note">
+<b>①</b> 立刻预约学校心理咨询室（入学第1周踩点）<br>
+<b>②</b> 设定3个倾诉对象（家人1+朋友1+老师1）<b>③</b> 每天写1件开心事（5分钟）<b>④</b> 压力日记：记录触发源+身体反应+应对<br>
+<b>⑤</b> 连续2周情绪≤3 → 必须预约专业咨询
+</div>
+</div>
+
+<!-- ========== 政策核对 ========== -->
+<div class="cd">
+<h3>📋 政策核对7项（每学期第1周）</h3>
+<div id="pcList"></div>
+</div>
+
+<!-- ========== 复盘卡 ========== -->
+<div class="cd b">
+<h3>📝 每周复盘卡</h3>
+<div>情绪：<b id="mv">5</b>/10</div>
+<input type="range" id="ms" min="1" max="10" value="5" oninput="document.getElementById('mv').textContent=this.value">
+<div style="font-size:0.78rem;margin-top:5px">原因(多选)：</div>
+<div id="rcTags" style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px">
+<span class="rt" onclick="tr(this)">任务过重</span>
+<span class="rt" onclick="tr(this)">英语瓶颈</span>
+<span class="rt" onclick="tr(this)">人际冲突</span>
+<span class="rt" onclick="tr(this)">思乡</span>
+<span class="rt" onclick="tr(this)">健康不佳</span>
+<span class="rt" onclick="tr(this)">目标模糊</span>
+<span class="rt" onclick="tr(this)">进度超前✅</span>
+</div>
+<div style="font-size:0.78rem;margin-top:8px">下周调整：</div>
+<textarea id="at" placeholder="3条调整措施..." style="margin-top:3px"></textarea>
+<button class="bt bt-g" onclick="sr()">💾保存复盘</button>
+<div id="wc" style="display:flex;align-items:flex-end;height:60px;gap:3px;margin-top:8px"></div>
+</div>
+
+<!-- ========== 暑假6周 ========== -->
+<div class="cd o">
+<h3>☀️ 暑假6周英语强化表</h3>
+<div class="note">
+<b>第1-2周</b>：音标总复习 + 词汇冲刺（每天50词）<br>
+<b>第3-4周</b>：语法专项 + 阅读精练（四级真题阅读）<br>
+<b>第5周</b>：听力突破（每天30min真题精听）<br>
+<b>第6周</b>：整套模考 + 弱项专项
+</div>
+</div>
+
+<!-- ========== 退役军人教师 ========== -->
+<div class="cd p">
+<h3>🎖️ 退役军人教师通道（2026新政）</h3>
+<div class="note">
+人社部+教育部2026通知：退役军人考教师招聘 <b>单列岗位 + 年龄放宽至40周岁</b><br>
+路径：入伍2年 → 退役 → 免试读师范（退役军人专项）→ 考教师编单列通道
+</div>
+</div>
+
+<!-- ========== 今晚6步 ========== -->
+<div class="wb" style="background:#eaf2f8;border-color:var(--blue)">
+<h3 style="color:var(--blue)">🚀 今晚立即行动6步</h3>
+<ol>
+<li>浏览器打开打卡单 / 打开APP → 熟悉界面</li>
+<li>访问 jwc.njts.edu.cn → 下载教育康复学人才培养方案</li>
+<li>下载"墨墨背单词" → 注册 → 选"四级高频词库"</li>
+<li>B站搜"英语音标教学" → 收藏一个完整课程</li>
+<li>全国征兵网注册学信网账号 + 测视力 + 称体重算BMI</li>
+<li>打给康复科学学院 025-89668064 问转专业考核科目</li>
+</ol>
+</div>
+
+<!-- ========== 关键电话速查 ========== -->
+<div class="cd" style="background:#fef9e7">
+<h3>📞 关键电话速查</h3>
+<div class="note" style="line-height:1.8">
+康复科学学院：<b>025-89668064</b>（吴老师）/ <b>025-89668061</b>（王老师）<br>
+教务处：<b>025-89668111</b> / <b>025-89668222</b><br>
+全国征兵网：<b>www.gfbzb.gov.cn</b>（截止2027.8.10）<br>
+教务处官网：<b>jwc.njts.edu.cn</b> | 学院官网：<b>kfkx.njts.edu.cn</b><br>
+军队人才网：<b>81rc.mil.cn</b> | NECCS报名：<b>saikr.com/neccs</b>
+</div>
+</div>
+
+<!-- ========== 参考文献 ========== -->
+<div class="cd" style="font-size:0.72rem;color:var(--gray)">
+<h3 style="color:var(--gray)">📖 参考文献</h3>
+<div>[1] 南京特师[2024]33号《普通本科学生转专业管理办法》</div>
+<div>[2] 全国大学生英语竞赛2026年竞赛章程（初赛2027.4.12）</div>
+<div>[3] 全国征兵网2027年征兵公告（男兵截止8.10）</div>
+<div>[4] CET2026年12月笔试报名公告（cet-bm.neea.edu.cn）</div>
+<div>[5] 卫健委卫生专业技术资格考试2024年公告（卫考办发〔2024〕1号）</div>
+<div>[6] 人社部+教育部2026年退役军人教师招聘通知</div>
+<div>[7] 国家职业资格目录（2021年版）</div>
+<div>[8] 南京特师康复科学学院官网教育康复学专业介绍</div>
+<div>[9] 南京特师2025年江苏省录取分数线（历史类最低455/物理类最低532）</div>
+<div>[10] 退役军人事务部《关于促进优秀退役军人到中小学任教的意见》</div>
+<div class="warn" style="margin-top:6px">⚠️ 以上政策每年微调，以入学后官方当年公告为准。本规划由AI辅助生成，请仔细甄别。</div>
+</div>
+
+<script>
+const today=new Date().toISOString().split('T')[0];
+const SK='tks_v4_data';
+const STORE={};
+
+// ========== 工作日14个时间点 ==========
+const wdTasks=[
+{t:'06:30',n:'起床洗漱',d:'闹钟放远处下床关冷水脸',r:1,alt:0,tag:'必做'},
+{t:'06:40',n:'晨跑2km',d:'心率120-140参军体能储备',r:0,alt:1,tag:'隔天'},
+{t:'07:10',n:'早餐+单词30',d:'墨墨背单词四级高频30新词',r:1,alt:0,tag:'必做'},
+{t:'07:40',n:'普通话跟读',d:'单字→双字→短文录音对比',r:0,alt:1,tag:'隔天'},
+{t:'08:00',n:'上课+笔记',d:'康奈尔笔记法主栏副栏总结栏',r:1,alt:0,tag:'必做'},
+{t:'12:00',n:'午休30min',d:'设13:00闹钟不睡下午腰斩',r:1,alt:0,tag:'保命'},
+{t:'13:00',n:'下午上课',d:'课后30分钟内复盘当天内容',r:1,alt:0,tag:'必做'},
+{t:'17:30',n:'专业课预习复习',d:'占70%时间决定转专业排名',r:1,alt:0,tag:'核心'},
+{t:'18:30',n:'晚餐+社交',d:'每周至少1次非功利社交',r:0,alt:0,tag:'弹性'},
+{t:'19:15',n:'英语地基',d:'音标/语法/阅读/听力40-70min',r:1,alt:0,tag:'必做'},
+{t:'20:00',n:'体能训练',d:'俯卧撑3×15+仰卧起坐3×20',r:0,alt:1,tag:'隔天'},
+{t:'20:30',n:'转专业备战',d:'精读教康导论+政策笔记交替',r:0,alt:1,tag:'隔天'},
+{t:'21:00',n:'复盘+明日计划',d:'勾选今日+明日3条核心计划',r:1,alt:0,tag:'必做'},
+{t:'22:30',n:'睡觉',d:'手机放书桌不带上床',r:1,alt:0,tag:'保命'},
+];
+
+const weTasks=[
+{t:'08:00',n:'起床+单词30',d:'周末不赖床单词先完成',r:1,tag:'必做'},
+{t:'08:30',n:'专业课深度学习',d:'攻难点转专业笔试',r:1,tag:'核心'},
+{t:'10:15',n:'英语专项1.5h',d:'语法阅读听力加量(含听力训练)',r:1,tag:'必做'},
+{t:'11:30',n:'午餐+休息1h',d:'午休恢复',r:0,tag:'保命'},
+{t:'14:00',n:'证书/副业/志愿',d:'手语/NECCS/教资选1-2项(转专业成功后)',r:0,tag:'后置'},
+{t:'15:30',n:'本周打卡勾选',d:'看完成率',r:1,tag:'必做'},
+{t:'16:00',n:'体能加量',d:'跑步3km/引体向上',r:0,tag:'弹性'},
+{t:'19:00',n:'政策研读',d:'每月第1周末政策+人脉',r:0,tag:'核对'},
+{t:'21:00',n:'睡觉准备',d:'22:30前睡',r:1,tag:'保命'},
+{t:'周日',n:'半休',d:'上午休息下午纯放松(玄武湖/紫金山)',r:1,tag:'必做'},
+];
+
+const bt4=[
+{n:'英语：单词30+听力/阅读20min',d:'零基础需9个月打底',tag:'保底'},
+{n:'专业课：当天作业+预习复习',d:'绩点是转专业入场券',tag:'保底'},
+{n:'睡眠：22:30前睡',d:'健康是1其他是0',tag:'保底'},
+{n:'体能微任务：10min拉伸/步行',d:'参军退路不可归零',tag:'保底'},
+];
+
+const weeks=[
+[1,'入学适应',['下载南特四份官方文件','B站学音标4-5个/天','社团只留1个数据社团'],'四份文件已归档',0],
+[2,'入学适应',['音标进度过半','高数预习启动','第一次班会发言'],'音标48个全会读',0],
+[3,'绩点保底',['词汇启动墨墨30词/天','教康导论第1-3章','高数错题本建立'],'词汇100+',0],
+[4,'绩点保底',['词汇300+','教康导论第4-6章','普通话跟读隔天'],'教康导论过半',0],
+[5,'★兵役决策',['与家长书面沟通入伍意向','视力BMI精确测量','近视手术咨询'],'入伍意向书面决定',1],
+[6,'绩点保底',['词汇600+','期中备考启动','转专业笔试准备'],'词汇600+期中不挂',0],
+[7,'期中冲刺',['期中考全科','词汇800+','NECCS报名确认(截止3.13)'],'期中全科合格',0],
+[8,'期中冲刺',['期中复盘','词汇1000+','转专业面试模拟1'],'词汇1000+',0],
+[9,'★转专业加速',['转专业笔试准备','词汇1200+','教康导论精读完成'],'笔试模拟≥80',2],
+[10,'★转专业加速',['面试模拟2次','词汇1400+','NECCS初赛冲刺'],'面试话术熟练',2],
+[11,'★转专业加速',['NECCS初赛4.12','转专业材料提交','词汇1500+'],'初赛完成',2],
+[12,'★转专业考核',['转专业笔试+面试','四级冲刺启动','词汇1600+'],'转专业结果公布',3],
+[13,'★★★期末决战',['期末复习全面启动','四级模考1','词汇1800+'],'无挂科风险',3],
+[14,'★★★期末决战',['期末考试','四级模考2','词汇1900+'],'GPA≥3.0',3],
+[15,'★★★期末决战',['四级正式考试6月','NECCS成绩跟进','词汇2000+'],'四级≥425',3],
+[16,'暑假',['暑假小学期/实习','参军报名决策','近视手术预约'],'暑假计划确定',0],
+[17,'暑假',['入伍政审准备','康复治疗师考纲预习'],'政审材料齐全',0],
+[18,'暑假',['大一下总结','大二规划制定','18周复盘'],'18周全部验收✅',0],
+];
+
+const emg=[
+['转专业失败','当日：找辅导员要反馈+写复盘报告','当周：启动B计划(辅修查询/跨考特教专硕/考公)','话术："我理解了教康专业的真实门槛，这促使我..."'],
+['四级未过','当日：分析薄弱项(听力/阅读/写作)','当周：切换备考策略报下一年6月场次','话术："失败让我建立了完整的英语自学体系"'],
+['体检淘汰','当日：问清淘汰项+医学建议','当周：近视手术决策/体能补足计划','话术："体检让我更早认识了身体管理的意义"'],
+['考编落榜','当日：复盘行测申论分数','当周：启动机构线/入伍线/考研线','话术："公考失败让我理解了基层服务的真实需求"'],
+];
+
+const certs=[
+['普通话二甲','大一下','教资/考公/特教必备',0],
+['英语四级≥425','大一下6月','毕业门槛+考研',0],
+['NECCS C类','大一下4月','竞赛加分+国奖',0],
+['英语六级≥425','大二上','考研+就业加分',1],
+['计算机二级','大二上','考公/事业编门槛',1],
+['教师资格证小学','大三上','特教编制必备',0],
+['康复治疗师资格','大四应届','⚠️需康复治疗学专业·教育学学位多数省份不可考·考研转方向',1],
+['心理咨询师中科院','大二下','特教+康复加分',1],
+['手语翻译等级','大二全年','⚠️非国家职业资格·行业认可度存疑',2],
+['软考初/中级','大二/大三','考公信息化岗加分',1],
+['机动车驾驶证','大二暑假','参军/工作通用',0],
+['退役士兵证','大二下退役','考公/教师单列计划',1],
+];
+
+const phys=[
+['身高','男≥160cm',1],
+['BMI','17.5≤BMI<30',1],
+['裸眼视力','≥4.5，<4.8需矫正',1],
+['矫正度数','≤600度',0],
+['血压','90≤收缩<140/60≤舒张<90',1],
+['心率','60-100次/分',1],
+['空腹血糖','<7.0 mmol/L',1],
+['色觉','无红绿色盲',0],
+['心电图','无异常',1],
+['血检','肝肾功能正常',1],
+['脊柱/扁平足','无严重畸形',0],
+['文身/瘢痕','裸露部位无文身',0],
+];
+
+const policy=[
+'南京特师教务处：转专业名额/绩点门槛 [jwc.njts.edu.cn 025-89668111]',
+'康复科学学院：考核科目/报录比 [kfkx.njts.edu.cn 025-89668064]',
+'全国征兵网：兵役登记+报名 [www.gfbzb.gov.cn 截止8.10]',
+'四级报名 cet-bm.neea.edu.cn',
+'NECCS报名 saikr.com/neccs (截止3月13日)',
+'军队人才网：文职公告 [81rc.mil.cn]',
+'省公务员局：当年公考公告',
+];
+
+const sems=[
+['大二上','转专业结果落地+补修大一课程+四级出分','补修GPA≥3.0/四级≥425/计算机二级报名','转专业成功→集中补修；失败→启动辅修/跨考'],
+['大二下','六级备考+教资笔试+退伍复学(如入伍)','六级≥425/教资过线/退伍手续完成','开始考研方向调研'],
+['大三上','考研/考公/入伍量化决策','行测模考≥65 / GPA≥3.5 / 体检全过','确定主攻方向·不再摇摆'],
+['大三下','考研备考OR考公备考OR入伍准备','考研大纲过完/公考模考稳定/入伍材料齐','全力冲刺·拒绝分心'],
+['大四上','考研初试/国考省考/入伍审批','初试上线/笔试进面/审批通过','等结果·准备复试/面试/入伍'],
+['大四下','毕业+就业/读研/入伍','拿到offer/录取/入伍通知','三条路至少走通一条'],
+];
+
+const enStages=[
+['①音标打底','第1-2周','B站48音标+跟读','48个全会读'],
+['②词汇启动','第3-6周','墨墨四级高频30/天+听力启蒙','累计600词+听力入门'],
+['③语法框架','第7-10周','5大句型+核心时态+词汇巩固','能分析句子结构'],
+['④阅读起步','第11-14周','VOA慢速+四级阅读+听力每天30min','能读短文+听力进步'],
+['⑤听力突破','第15-16周','四级真题听力精听+阅读强化','能听写句子'],
+['⑥冲刺阶段','第17-18周','四级真题整套模考','四级≥425'],
+];
+
+// ========== 存储 ==========
+function loadData(){try{return JSON.parse(localStorage.getItem(SK))||{}}catch(e){return{}}}
+function saveData(d){localStorage.setItem(SK,JSON.stringify(d))}
+let D=loadData();
+if(!D.ck)D.ck={};
+if(!D.certs)D.certs={};
+if(!D.phy)D.phy={};
+if(!D.pcy)D.pcy={};
+if(!D.hist)D.hist=[];
+if(!D.rsn)D.rsn=[];
+if(D.mood===undefined)D.mood=5;
+if(D.voc===undefined)D.voc=0;
+if(D.strk===undefined)D.strk=0;
+if(D.lcd===undefined)D.lcd=null;
+
+// ========== 渲染 ==========
+function render(){
+document.getElementById('dt').textContent=today;
+
+// 工作日
+let wdHtml='';
+let total=0,done=0;
+wdTasks.forEach((t,i)=>{
+let id='wd'+i,c=D.ck[id];
+if(c)done++;total++;
+wdHtml+=`<div class="ts" onclick="tg('${id}')"><div class="cb ${t.r?'rq':''}${t.alt?' alt':''}${c?' ck':''}">${c?'✓':''}</div><div class="tb"><div class="tt">${t.t} ${t.n} ${t.r?'<span class="tg rq">必做</span>':t.alt?'<span class="tg alt">隔天</span>':''}${t.tag=='核心'?'<span class="tg core">核心</span>':t.tag=='保命'?'<span class="tg bm">保命</span>':''}</div><div class="td">${t.d}</div></div></div>`;
+});
+
+// 周末
+let d=new Date().getDay();
+document.getElementById('weCard').style.display=[0,6].includes(d)?'block':'none';
+let weHtml='';
+if([0,6].includes(d)){weTasks.forEach((t,i)=>{
+let id='we'+i,c=D.ck[id];if(c)done++;total++;
+weHtml+=`<div class="ts" onclick="tg('${id}')"><div class="cb ${t.r?'rq':''}${c?' ck':''}">${c?'✓':''}</div><div class="tb"><div class="tt">${t.t} ${t.n} ${t.r?'<span class="tg rq">必做</span>':t.tag=='核心'?'<span class="tg core">核心</span>':t.tag=='保命'?'<span class="tg bm">保命</span>':t.tag=='后置'?'<span class="tg alt">后置</span>':''}</div><div class="td">${t.d}</div></div></div>`;
+});}
+
+// 保底4项
+let btHtml='';
+bt4.forEach((t,i)=>{
+let id='bt'+i,c=D.ck[id];if(c)done++;total++;
+btHtml+=`<div class="ts" onclick="tg('${id}')"><div class="cb rq ${c?'ck':''}">${c?'✓':''}</div><div class="tb"><div class="tt">${t.n}</div><div class="td">${t.d}</div></div></div>`;
+});
+
+document.getElementById('wd').innerHTML=wdHtml;
+document.getElementById('we').innerHTML=weHtml;
+document.getElementById('bt4').innerHTML=btHtml;
+
+// 统计
+document.getElementById('ttl').textContent=total;
+document.getElementById('tdn').textContent=done;
+document.getElementById('pbar').style.width=(total>0?done/total*100:0)+'%';
+document.getElementById('vc').textContent=D.voc;
+document.getElementById('vcr').textContent=D.voc;
+document.getElementById('vpct').textContent=Math.round(D.voc/2000*100);
+document.getElementById('vp').style.width=(D.voc/2000*100)+'%';
+document.getElementById('mv').textContent=D.mood;
+document.getElementById('ms').value=D.mood;
+
+// 英语阶段
+document.getElementById('enStages').innerHTML='<table><tr><th>阶段</th><th>周次</th><th>任务</th><th>验收</th></tr>'+
+enStages.map(s=>`<tr><td>${s[0]}</td><td>${s[1]}</td><td>${s[2]}</td><td>${s[3]}</td></tr>`).join('')+'</table>';
+
+// 18周
+let wkHtml='';
+weeks.forEach(w=>{
+let stars=w[4]==3?'star3':w[4]==2?'star2':w[4]==1?'star1':'';
+let starMark=w[4]>=3?'⭐⭐⭐':w[4]==2?'⭐⭐':w[4]==1?'⭐':'';
+wkHtml+=`<div class="wk ${stars}"><b>第${w[0]}周 ${w[1]}</b> ${starMark}<ul>${w[2].map(x=>`<li>${x}</li>`).join('')}</ul><div class="ck">✅ ${w[3]}</div></div>`;
+});
+document.getElementById('wkList').innerHTML=wkHtml;
+
+// 四大应急
+document.getElementById('emList').innerHTML=emg.map(e=>
+`<div style="margin-bottom:6px;padding:6px 8px;background:#fafafa;border-radius:5px;border-left:3px solid var(--red)"><b>${e[0]}</b><div style="font-size:0.75rem;margin-top:2px">当日：${e[1]}</div><div style="font-size:0.75rem">当周：${e[2]}</div><div style="font-size:0.72rem;color:var(--gray)">💡 ${e[3]}</div></div>`
+).join('');
+
+// 证书
+let certHtml='<table><tr><th>证书</th><th>时间</th><th>用途</th><th>√</th></tr>';
+certs.forEach((c,i)=>{
+let ck=D.certs[i];
+let tag=c[3]==0?'':c[3]==1?'<span class="tag-o">后置</span>':'<span class="tag-r">🔴不考</span>';
+certHtml+=`<tr><td>${c[0]} ${tag}</td><td>${c[1]}</td><td>${c[2]}</td><td><span class="cb ${ck?'ck':''}" onclick="D.certs[${i}]=!D.certs[${i}];saveData(D);render()" style="cursor:pointer;display:inline-flex">${ck?'✓':''}</span></td></tr>`;
+});
+certHtml+='</table>';
+document.getElementById('certList').innerHTML=certHtml;
+
+// 体检
+let phyHtml='<table><tr><th>项目</th><th>标准</th><th>可逆性</th><th>我的数据</th></tr>';
+phys.forEach((p,i)=>{
+let rev=p[2]?'<span class="tag-g">✅可逆</span>':'<span class="tag-r">⚠️不可逆</span>';
+phyHtml+=`<tr><td>${p[0]}</td><td>${p[1]}</td><td>${rev}</td><td><input style="width:60px;padding:2px 4px;font-size:0.75rem" placeholder="填入" value="${D.phy[i]||''}" onchange="D.phy[${i}]=this.value;saveData(D)"></td></tr>`;
+});
+phyHtml+='</table>';
+document.getElementById('phyList').innerHTML=phyHtml;
+
+// 政策核对
+document.getElementById('pcList').innerHTML=policy.map((p,i)=>{
+let ck=D.pcy[i];
+return `<div class="ts" onclick="D.pcy[${i}]=!D.pcy[${i}];saveData(D);render()"><div class="cb ${ck?'ck':''}">${ck?'✓':''}</div><div class="tb"><div class="tt" style="font-size:0.78rem">${p}</div></div></div>`;
+}).join('');
+
+// 学期框架
+document.getElementById('semList').innerHTML='<table><tr><th>学期</th><th>目标</th><th>验收</th><th>备注</th></tr>'+
+sems.map(s=>`<tr><td>${s[0]}</td><td>${s[1]}</td><td>${s[2]}</td><td>${s[3]}</td></tr>`).join('')+'</table>';
+
+// 7日图表
+let wc=document.getElementById('wc');
+let days=['一','二','三','四','五','六','日'];
+let maxH=Math.max(...D.hist.map(h=>h.r||0),1);
+wc.innerHTML=D.hist.slice(-7).map(h=>{let r=h.r||0;return `<div style="flex:1;background:${r>=80?'#1e8449':r>=60?'#d35400':'#c0392b'};height:${(r/maxH*50)}px;border-radius:2px 2px 0 0;min-height:2px" title="${r}%"></div>`}).join('');
+
+// 弹性日检查
+let rate=total>0?Math.round(done/total*100):100;
+if(rate<50&&!sessionStorage.getItem('flex_today')){
+sessionStorage.setItem('flex_today','1');
+// 显示提示
+let nt=document.getElementById('nt');
+document.getElementById('ntt').textContent='⚠️ 完成率<50%·切换保底模式';
+document.getElementById('ntp').textContent='今日只做保底4项，明天恢复。连续3天保底完成自动恢复正常。';
+nt.classList.add('sw');
+if(navigator.vibrate)navigator.vibrate([0,300,100,300]);
+}
+}
+
+function tg(id){D.ck[id]=!D.ck[id];saveData(D);render();checkNotif();}
+function uv(){let v=parseInt(document.getElementById('vi').value)||0;D.voc=v;saveData(D);render();}
+function tr(el){el.style.background=el.style.background?'':'#2471a3';el.style.color=el.style.color?'':'#fff';let r=el.textContent;if(!D.rsn.includes(r))D.rsn.push(r);else D.rsn=D.rsn.filter(x=>x!==r);saveData(D);}
+function sr(){
+D.mood=parseInt(document.getElementById('ms').value)||5;
+D.at=document.getElementById('at').value;
+let today=new Date().toLocaleDateString('zh-CN',{weekday:'short'});
+let total=wdTasks.length+weTasks.length+bt4.length;
+let done=0;
+wdTasks.forEach((t,i)=>{if(D.ck['wd'+i])done++});
+weTasks.forEach((t,i)=>{if(D.ck['we'+i])done++});
+bt4.forEach((t,i)=>{if(D.ck['bt'+i])done++});
+let rate=Math.round(done/total*100);
+D.hist.push({d:today,r:rate});
+if(D.hist.length>30)D.hist=D.hist.slice(-30);
+saveData(D);render();
+alert('复盘已保存！今日完成率：'+rate+'%');
+}
+function dn(){document.getElementById('nt').classList.remove('sw');sessionStorage.clear();}
+function ht(){document.getElementById('nt').classList.remove('sw');setTimeout(()=>{document.getElementById('nt').classList.add('sw')},1800000);}
+
+// 连续天数
+let now=new Date();
+if(D.lcd&&D.lcd!==today){let yest=new Date(now);yest.setDate(now.getDate()-1);if(D.lcd===yest.toISOString().split('T')[0])D.strk++;else D.strk=1;}
+D.lcd=today;saveData(D);
+document.getElementById('strk').textContent=D.strk;
+
+// 通知检查
+function checkNotif(){
+let now2=new Date();let hm=now2.getHours()*60+now2.getMinutes();
+wdTasks.forEach((t,i)=>{
+let [h,m]=t.t.split(':').map(Number);
+let tHM=h*60+m;
+if(Math.abs(hm-tHM)<=2&&!D.ck['wd'+i]&&!sessionStorage.getItem('nt_'+i)){
+document.getElementById('ntt').textContent='⏰ '+t.t+' '+t.n;
+document.getElementById('ntp').textContent=t.d;
+document.getElementById('nt').classList.add('sw');
+sessionStorage.setItem('nt_'+i,'1');
+if(navigator.vibrate)navigator.vibrate([0,200,100,200]);
+}
+});
+}
+
+// 初始化
+render();
+setInterval(checkNotif,30000);
+</script>
+</body>
+</html>
